@@ -3,9 +3,6 @@ import { SessionData } from 'express-session';
 import { UseRoles } from 'nest-access-control';
 import { EmployeeDataService } from './employee-data.service';
 
-
-
-
 @Controller('employee-data')
 export class EmployeeDataController {
   constructor(private employeeDataService: EmployeeDataService) {}
@@ -52,7 +49,7 @@ export class EmployeeDataController {
   ) {
     return this.employeeDataService.getEmployeesBySector(
       session.user.userId,
-      session.user.roles[0],
+      session.user.roles,
       sector,
     );
   }

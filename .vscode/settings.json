@@ -1,0 +1,6 @@
+{
+    "debug.allowBreakpointsEverywhere": true,
+    "debug.autoExpandLazyVariables": false,
+    "debug.openExplorerOnEnd": true,
+    "editor.formatOnSave": true
+}
