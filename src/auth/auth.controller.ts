@@ -8,9 +8,10 @@ import {
   SetMetadata,
   UseGuards,
 } from '@nestjs/common';
-import { SessionData } from 'express-session';
 import { Request } from 'express';
 import { AuthGuard } from '@nestjs/passport';
+import { updatedRequest } from 'src/interfaces/request-interface';
+import { updatedSessionData } from 'src/interfaces/session-data-interface';
 
 @Controller('auth')
 export class AuthController {
@@ -18,7 +19,7 @@ export class AuthController {
   @UseGuards(AuthGuard('local'))
   @HttpCode(HttpStatus.OK)
   @Post('/login')
-  login(@Req() req: Request, @Session() session: SessionData) {
+  login(@Req() req: updatedRequest, @Session() session: updatedSessionData) {
     session.user = {
       userId: req.user.userId,
       username: req.user.username,

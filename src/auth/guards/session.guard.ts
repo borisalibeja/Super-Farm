@@ -4,8 +4,8 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Request } from 'express';
 import { Reflector } from '@nestjs/core';
+import { updatedRequest } from 'src/interfaces/request-interface';
 
 @Injectable()
 export class SessionGuard implements CanActivate {
@@ -19,7 +19,7 @@ export class SessionGuard implements CanActivate {
 
     if (isPublicRoute) return true;
 
-    const request = context.switchToHttp().getRequest<Request>();
+    const request = context.switchToHttp().getRequest<updatedRequest>();
     if (request.session?.user?.userId) {
       request.user = request.session.user;
       return true;

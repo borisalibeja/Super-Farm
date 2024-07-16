@@ -1,13 +1,13 @@
 import { Body, Controller, Get, Post, Session } from '@nestjs/common';
-import { SessionData } from 'express-session';
 import { UseRoles } from 'nest-access-control';
 import { UserService } from './user.service';
+import { updatedSessionData } from 'src/interfaces/session-data-interface';
 
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
   @Get('me')
-  getMe(@Session() session: SessionData) {
+  getMe(@Session() session: updatedSessionData) {
     return this.userService.getMe(session.user.userId);
   }
 

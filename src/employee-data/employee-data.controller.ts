@@ -2,6 +2,7 @@ import { Controller, Get, Param, ParseIntPipe, Session } from '@nestjs/common';
 import { SessionData } from 'express-session';
 import { UseRoles } from 'nest-access-control';
 import { EmployeeDataService } from './employee-data.service';
+import { updatedSessionData } from 'src/interfaces/session-data-interface';
 
 @Controller('employee-data')
 export class EmployeeDataController {
@@ -23,7 +24,7 @@ export class EmployeeDataController {
     possession: 'any',
   })
   @Get()
-  getManagedEmployees(@Session() session: SessionData) {
+  getManagedEmployees(@Session() session: updatedSessionData) {
     return this.employeeDataService.getManagedEmployees(session.user.userId);
   }
 
@@ -45,7 +46,7 @@ export class EmployeeDataController {
   @Get('sector/:sector')
   getEmployeesBySector(
     @Param('sector') sector: string,
-    @Session() session: SessionData,
+    @Session() session: updatedSessionData,
   ) {
     return this.employeeDataService.getEmployeesBySector(
       session.user.userId,
