@@ -1,5 +1,4 @@
 import { Controller, Get, Param, ParseIntPipe, Session } from '@nestjs/common';
-import { SessionData } from 'express-session';
 import { UseRoles } from 'nest-access-control';
 import { EmployeeDataService } from './employee-data.service';
 import { updatedSessionData } from 'src/interfaces/session-data-interface';

@@ -88,23 +88,29 @@ async function main() {
 
   // create manager
   const eCoinDep = dbDepartments.find((dep) => dep.name === 'E Coin');
-  await prisma.user.create({
-    data: {
-      username: 'tyrell.wellick@e-corp.com',
-      password: await argon.hash('pwned'),
-      fullName: 'Tyrell Wellick',
-      salary: '120000',
-      contactInfo: faker.phone.number('(###) ###-####'),
-      departmentsLink: {
-        create: {
-          role: 'MANAGER',
-          jobTitle: 'Department Manager',
-          assignedBy: 'system',
-          departmentId: eCoinDep.id,
+
+  if (eCoinDep) { 
+    await prisma.user.create({
+      data: {
+        username: 'tyrell.wellick@e-corp.com',
+        password: await argon.hash('pwned'),
+        fullName: 'Tyrell Wellick',
+        salary: '120000',
+        contactInfo: faker.phone.number('(###) ###-####'),
+        departmentsLink: {
+          create: {
+            role: 'MANAGER',
+            jobTitle: 'Department Manager',
+            assignedBy: 'system',
+            departmentId: eCoinDep.id,
+          },
         },
       },
-    },
-  });
+    });
+    console.log('User created successfully');
+  } else {
+    console.log('E Coin department not found');
+  }
 
   // create users
   for (let i = 0; i <= 100; ++i) {
