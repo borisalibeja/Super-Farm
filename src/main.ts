@@ -2,6 +2,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import session from 'express-session';
 import { AppModule } from './app.module';
+import * as seed from 'prisma/seed'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
