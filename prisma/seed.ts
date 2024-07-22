@@ -17,19 +17,19 @@ const jobTypes = [
 ];
 
 export async function createRandomUser() {
-  const firstName = faker.name.firstName();
-  const lastName = faker.name.lastName();
+  const firstName = faker.person.firstName();
+  const lastName = faker.person.lastName();
   return {
     fullName: `${firstName} ${lastName}`,
-    username: faker.internet.email(firstName, lastName, 'e-corp.com'),
+    username: faker.internet.email({firstName}, lastName, 'e-corp.com'),
     role: 'USER',
     password: await argon.hash('pwned'),
     workerRecord: {
       name: `${firstName} ${lastName}`,
       jobTitle: faker.helpers.arrayElement(jobTypes),
       department: faker.helpers.arrayElement(departments),
-      salary: faker.random.numeric(6).toString(),
-      contactInfo: faker.phone.number('(###) ###-####'),
+      salary: faker.string.numeric(6).toString(),
+      contactInfo: faker.phone.number(),
     },
   };
 }
@@ -71,7 +71,7 @@ async function main() {
                 create: {
                   username: 'terry.colby@e-corp.com',
                   fullName: 'Terry Colby',
-                  contactInfo: faker.phone.number('(###) ###-####'),
+                  contactInfo: faker.phone.number(),
                   password: await argon.hash('pwned'),
                   salary: '200000',
                 },
@@ -96,7 +96,7 @@ async function main() {
         password: await argon.hash('pwned'),
         fullName: 'Tyrell Wellick',
         salary: '120000',
-        contactInfo: faker.phone.number('(###) ###-####'),
+        contactInfo: faker.phone.number(),
         departmentsLink: {
           create: {
             role: 'MANAGER',

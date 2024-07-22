@@ -54,7 +54,7 @@ export class EmployeeDataService {
       },
     });
 
-    const sections = departments.departmentsLink.map(
+    const sections = departments?.departmentsLink.map(
       (dep) => dep.department.name,
     );
 
