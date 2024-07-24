@@ -12,22 +12,22 @@ export class UserController {
   }
 
   @UseRoles({
-    resource: 'customerData',
+    resource: 'userData',
     action: 'update',
     possession: 'any',
   })
-  @Post('promote')
-  promoteUserToManager(@Body('employeeId') employeeId: string) {
-    return this.userService.promoteCustomertoFarmer(employeeId);
+  @Post('/promote')
+  promoteCustomertoFarmer(@Body('customerId') customerId: string) {
+    return this.userService.promoteCustomertoFarmer(customerId);
   }
 
   @UseRoles({
-    resource: 'employeeData',
+    resource: 'userData',
     action: 'update',
     possession: 'any',
   })
-  @Post('demote')
-  demoteManagerToUser(@Body('employeeId') employeeId: string) {
-    return this.userService.demoteManagerToUser(employeeId);
+  @Post('/demote')
+  demoteFarmertoCustomer(@Body('farmerId') farmerId: string) {
+    return this.userService.demoteFarmertoCustomer(farmerId);
   }
 }
