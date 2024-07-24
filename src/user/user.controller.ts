@@ -3,6 +3,7 @@ import { UseRoles } from 'nest-access-control';
 import { UserService } from './user.service';
 import { updatedSessionData } from 'src/auth/interfaces/session-data-interface';
 
+
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
@@ -12,7 +13,7 @@ export class UserController {
   }
 
   @UseRoles({
-    resource: 'userData',
+    resource: 'customerData',
     action: 'update',
     possession: 'any',
   })
@@ -22,7 +23,7 @@ export class UserController {
   }
 
   @UseRoles({
-    resource: 'userData',
+    resource: 'farmerData',
     action: 'update',
     possession: 'any',
   })
