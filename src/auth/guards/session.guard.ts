@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { updatedRequest } from 'src/interfaces/request-interface';
+import { updatedRequest } from 'src/auth/interfaces/request-interface';
 
 @Injectable()
 export class SessionGuard implements CanActivate {

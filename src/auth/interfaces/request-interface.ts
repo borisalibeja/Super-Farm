@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { Role } from "src/auth/enums";
+import { Role } from "src/auth/enums/roles";
 
 
 

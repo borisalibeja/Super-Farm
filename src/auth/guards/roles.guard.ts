@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Role } from '../enums';
-import { updatedRequest } from 'src/interfaces/request-interface';
+import { Role } from '../enums/roles';
+import { updatedRequest } from 'src/auth/interfaces/request-interface';
 
 
 

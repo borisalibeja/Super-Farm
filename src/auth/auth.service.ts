@@ -11,13 +11,13 @@ export class AuthService {
       where: {
         username
       },
-      include: {
-        departmentsLink: {
-          select: {
-            role: true,
-          },
-        },
-      },
+      select: {
+        role: true,
+        id: true,
+        username: true,
+        password: true
+      }
+      
     });
     if (!user) return null;
 

@@ -1,5 +1,5 @@
 import { SessionData } from "express-session";
-import { Role } from "src/auth/enums";
+import { Role } from "src/auth/enums/roles";
 
 
 export interface updatedSessionData extends SessionData {

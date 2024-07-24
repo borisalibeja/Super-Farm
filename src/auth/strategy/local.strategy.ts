@@ -2,7 +2,7 @@ import { Strategy } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from '../auth.service';
-import { Role } from '../enums';
+import { Role } from '../enums/roles';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
@@ -16,15 +16,11 @@ export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
       throw new UnauthorizedException('Credentials incorrect');
     }
 
-    const userIsAdmin = user.departmentsLink.some(
-      (link) => link.role === Role.ADMIN,
-    );
-    const userIsManager = user.departmentsLink.some(
-      (link) => link.role === Role.MANAGER,
-    );
+    const userIsAdmin = user.role === Role.ADMIN;
+    const userisFarmer = user.role === Role.FARMER;
 
-    let userRole = Role.USER;
-    if (userIsManager) userRole = Role.MANAGER;
+    let userRole = Role.CUSTOMER;
+    if (userisFarmer) userRole = Role.FARMER;
     if (userIsAdmin) userRole = Role.ADMIN;
 
     return {

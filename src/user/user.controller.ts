@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Session } from '@nestjs/common';
 import { UseRoles } from 'nest-access-control';
 import { UserService } from './user.service';
-import { updatedSessionData } from 'src/interfaces/session-data-interface';
+import { updatedSessionData } from 'src/auth/interfaces/session-data-interface';
 
 @Controller('user')
 export class UserController {
@@ -12,13 +12,13 @@ export class UserController {
   }
 
   @UseRoles({
-    resource: 'employeeData',
+    resource: 'customerData',
     action: 'update',
     possession: 'any',
   })
   @Post('promote')
   promoteUserToManager(@Body('employeeId') employeeId: string) {
-    return this.userService.promoteUserToManager(employeeId);
+    return this.userService.promoteCustomertoFarmer(employeeId);
   }
 
   @UseRoles({

@@ -1,10 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Role } from 'src/auth/enums';
+import { Role } from 'src/auth/enums/roles';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService) {}
+  
   getMe(userId: string) {
     return this.prisma.user.findFirst({
       where: {
@@ -14,46 +15,44 @@ export class UserService {
         id: true,
         createdAt: true,
         username: true,
-        fullName: true,
-        departmentsLink: {
-          include: {
-            department: true,
-          },
-        },
+        firstName: true,
+        lastName: true,
+        role: true
       },
     });
   }
 
-  async promoteUserToManager(employeeId: string) {
-    const departmentLink = await this.prisma.userDepartmentLink.findFirst({
+
+  async promoteCustomertoFarmer(userId: string) {
+    const departmentLink = await this.prisma.user.findFirst({
       where: {
-        userId: employeeId,
+        id: userId,
       },
     });
     if (!departmentLink) throw new NotFoundException('Department not found');
-    await this.prisma.userDepartmentLink.update({
+    await this.prisma.user.update({
       where: {
         id: departmentLink.id,
       },
       data: {
-        role: Role.MANAGER,
+        role: Role.FARMER,
       },
     });
   }
 
   async demoteManagerToUser(employeeId: string) {
-    const departmentLink = await this.prisma.userDepartmentLink.findFirst({
+    const departmentLink = await this.prisma.user.findFirst({
       where: {
-        userId: employeeId,
+        id: employeeId,
       },
     });
     if (!departmentLink) throw new NotFoundException('Department not found');
-    await this.prisma.userDepartmentLink.update({
+    await this.prisma.user.update({
       where: {
         id: departmentLink.id,
       },
       data: {
-        role: Role.USER,
+        role: Role.CUSTOMER,
       },
     });
   }
