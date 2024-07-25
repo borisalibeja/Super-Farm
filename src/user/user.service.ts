@@ -23,37 +23,52 @@ export class UserService {
   }
 
 
-  async promoteCustomertoFarmer(userId: string) {
+  async promoteCustomertoFarmer(customerId: string) {
     const customer = await this.prisma.user.findFirst({
       where: {
-        id: userId,
+        id: customerId,
       },
+      select: {
+        firstName: true,
+        lastName: true,
+        contactInfo: true,
+        role: true
+      }
     });
     if (!customer) throw new NotFoundException('Customer not found');
     await this.prisma.user.update({
       where: {
-        id: customer.id,
+        id: customerId,
       },
       data: {
         role: Role.FARMER,
       },
     });
+    return customer;
   }
+
 
   async demoteFarmertoCustomer(farmerId: string) {
     const farmer = await this.prisma.user.findFirst({
       where: {
         id: farmerId,
       },
+      select: {
+        firstName: true,
+        lastName: true,
+        contactInfo: true,
+        role: true
+      }
     });
     if (!farmer) throw new NotFoundException('Farmer not found');
     await this.prisma.user.update({
       where: {
-        id: farmer.id,
+        id: farmerId,
       },
       data: {
         role: Role.CUSTOMER,
       },
     });
+    return farmer;
   }
 }

@@ -18,17 +18,18 @@ export class UserController {
     possession: 'any',
   })
   @Post('/promote')
-  promoteCustomertoFarmer(@Body('customerId') customerId: string) {
+  promoteCustomertoFarmer(@Body('userId') customerId: string) {
     return this.userService.promoteCustomertoFarmer(customerId);
   }
 
+  
   @UseRoles({
     resource: 'farmerData',
     action: 'update',
     possession: 'any',
   })
   @Post('/demote')
-  demoteFarmertoCustomer(@Body('farmerId') farmerId: string) {
-    return this.userService.demoteFarmertoCustomer(farmerId);
+  demoteFarmertoCustomer(@Body('userId') farmerId: string) {
+    return this.userService.demoteFarmertoCustomer(farmerId)
   }
 }

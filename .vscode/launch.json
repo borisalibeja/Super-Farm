@@ -1,25 +1,22 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-      {
-        "type": "node",
-        "request": "launch",
-        "name": "Debug NestJS Application",
-        "runtimeExecutable": "node",
-        "runtimeArgs": [
-          "-r",
-          "ts-node/register",
-          "-r",
-          "tsconfig-paths/register"
-        ],
-        "args": ["${workspaceFolder}/src/main.ts"],
-        "cwd": "${workspaceFolder}",
-        "protocol": "inspector",
-        "internalConsoleOptions": "openOnSessionStart",
-        "skipFiles": ["<node_internals>/**"],
-        "sourceMaps": true,
-        "outFiles": ["${workspaceFolder}/dist/**/*.js"]
-      }
-    ]
-  }
-  
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug NestJS Application",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/src/main.ts",
+      "runtimeExecutable": "C:/Program Files/nodejs/node.exe", // Replace this with the path to your Node.js executable
+      "runtimeArgs": ["--nolazy", "-r", "ts-node/register", "-r", "tsconfig-paths/register"],
+      "sourceMaps": true,
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"],
+      "autoAttachChildProcesses": true
+    }
+  ]
+}
