@@ -14,29 +14,55 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String   @id @default(auto()) @map("_id") @db.ObjectId
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   username    String @unique
   password    String
-  firstName   String
+  firstName   String 
   lastName    String
   contactInfo String
   role        String
-  //salary      String
-  //departmentsLink UserDepartmentLink[]
+  farmName  String @unique
+
+  productsByFarmName Products[] @relation("ProductsByFarmName")
+  productsByFarmId   Products[] @relation("ProductsByFarmId")
 }
 
 model Products {
-  id String   @id @default(auto()) @map("_id") @db.ObjectId
+  productId String   @id @default(auto()) @map("_id") @db.ObjectId
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  name String
+  productName String
   category String
   price String
+
+  farmName    String
+  farmname  User       @relation("ProductsByFarmName", fields: [farmName], references: [farmName])
+  farmId    String     @db.ObjectId
+  farmid   User       @relation("ProductsByFarmId", fields: [farmId], references: [userId])
 }
+
+// model FarmProductLink {
+//   id         String   @id @default(auto()) @map("_id") @db.ObjectId
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   role String
+
+//   userId String @db.ObjectId
+//   user   User @relation(fields: [userId], references: [id])
+
+//   productId String @db.ObjectId
+//   product   Products @relation(fields: [productId], references: [id])
+
+//   assignedAt DateTime @default(now())
+//   assignedBy String
+
+
+// }
 
 // model Department {
 //   id        String   @id @default(auto()) @map("_id") @db.ObjectId

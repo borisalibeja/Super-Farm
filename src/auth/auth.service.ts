@@ -13,7 +13,7 @@ export class AuthService {
       },
       select: {
         role: true,
-        id: true,
+        userId: true,
         username: true,
         password: true
       }

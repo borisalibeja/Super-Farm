@@ -9,10 +9,10 @@ export class UserService {
   getMe(userId: string) {
     return this.prisma.user.findFirst({
       where: {
-        id: userId,
+        userId: userId,
       },
       select: {
-        id: true,
+        userId: true,
         createdAt: true,
         username: true,
         firstName: true,
@@ -26,7 +26,16 @@ export class UserService {
   async promoteCustomertoFarmer(customerId: string) {
     const customer = await this.prisma.user.findFirst({
       where: {
-        id: customerId,
+        userId: customerId,
+      }
+    });
+    if (!customer) throw new NotFoundException('Customer not found');
+    const updatedCustomer = await this.prisma.user.update({
+      where: {
+        userId: customerId,
+      },
+      data: {
+        role: Role.FARMER,
       },
       select: {
         firstName: true,
@@ -35,23 +44,23 @@ export class UserService {
         role: true
       }
     });
-    if (!customer) throw new NotFoundException('Customer not found');
-    await this.prisma.user.update({
-      where: {
-        id: customerId,
-      },
-      data: {
-        role: Role.FARMER,
-      },
-    });
-    return customer;
+    return updatedCustomer;
   }
 
 
   async demoteFarmertoCustomer(farmerId: string) {
     const farmer = await this.prisma.user.findFirst({
       where: {
-        id: farmerId,
+        userId: farmerId,
+      }
+    });
+    if (!farmer) throw new NotFoundException('Farmer not found');
+    const updatedFarmer = await this.prisma.user.update({
+      where: {
+        userId: farmerId,
+      },
+      data: {
+        role: Role.CUSTOMER,
       },
       select: {
         firstName: true,
@@ -60,15 +69,6 @@ export class UserService {
         role: true
       }
     });
-    if (!farmer) throw new NotFoundException('Farmer not found');
-    await this.prisma.user.update({
-      where: {
-        id: farmerId,
-      },
-      data: {
-        role: Role.CUSTOMER,
-      },
-    });
-    return farmer;
+    return updatedFarmer;
   }
 }
