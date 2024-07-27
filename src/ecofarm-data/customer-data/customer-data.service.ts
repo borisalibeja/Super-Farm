@@ -13,7 +13,7 @@ export class CustomerDataService {
                 role: Role.CUSTOMER,
             },
             select: {
-                id: true,
+                userId: true,
                 username: true,
                 firstName: true,
                 lastName: true,
@@ -26,10 +26,10 @@ export class CustomerDataService {
     getCustomerById(customerId: string) {
         return this.prisma.user.findUnique({
             where: {
-                id: customerId
+                userId: customerId
             },
             select: {
-                id: true,
+                userId: true,
                 username: true,
                 firstName: true,
                 lastName: true,
@@ -45,7 +45,7 @@ export class CustomerDataService {
                 firstName: customerName
             },
             select : {
-                id: true,
+                userId: true,
                 username: true,
                 firstName: true,
                 lastName: true,
@@ -58,13 +58,13 @@ export class CustomerDataService {
     async deleteCustomerById(customerId: string): Promise<{message: string}> {
         await this.prisma.user.delete({
             where: {
-                id: customerId
+                userId: customerId
             }
         });
         return {message: 'Customer deleted'}
     };
 
-    async createCustomer(firstName: string, lastName: string, contactInfo: string, username: string, password: string) {
+    async createCustomer(firstName: string, lastName: string, contactInfo: string, username: string, password: string, farmName?: string | any) {
         return this.prisma.user.create({
             data: { 
                 username: username,
@@ -72,7 +72,8 @@ export class CustomerDataService {
                 firstName: firstName,
                 lastName: lastName,
                 contactInfo: contactInfo,
-                role: 'CUSTOMER'
+                role: 'CUSTOMER',
+                farmName: farmName
             },
             select: {
                 firstName: true,
@@ -87,7 +88,7 @@ export class CustomerDataService {
     async updateCustomerById(customerId: string, firstName?: string, lastName?: string, contactInfo?: string, username?: string, password?: string) {
         const customer = await this.prisma.user.findFirst({
           where: {
-            id: customerId,
+            userId: customerId,
           },
           select: {
             firstName: true,
@@ -107,7 +108,7 @@ export class CustomerDataService {
 
         const updatedCustomer = await this.prisma.user.update({
         where: {
-            id: customerId,
+            userId: customerId,
         },
         select: {
             firstName: true,

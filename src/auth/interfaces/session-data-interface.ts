@@ -7,6 +7,8 @@ export interface updatedSessionData extends SessionData {
         userId: string;
         username: string;
         roles: Role;
+        farmId?: string | undefined;
+        farmName?: string | undefined;
     }
 
 }

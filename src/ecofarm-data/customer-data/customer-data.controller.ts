@@ -54,8 +54,9 @@ export class CustomerDataController {
         @Body('contactInfo') contactInfo: string,
         @Body('username') username: string,
         @Body('password') password: string,
+        @Body('farmName') farmName?: string
     ) {
-        return this.customerDataService.createCustomer(firstName, lastName, contactInfo, username, password);
+        return this.customerDataService.createCustomer(firstName, lastName, contactInfo, username, password, farmName);
     }
     
     

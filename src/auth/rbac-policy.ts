@@ -12,7 +12,7 @@ RBAC_POLICY
     .readAny('farmData')
   .grant(Role.FARMER)
     .extend(Role.CUSTOMER)
-    .createOwn('productData')
+    .create('productData')
     .updateOwn('productData')
     .deleteOwn('productData')
   .grant(Role.ADMIN)

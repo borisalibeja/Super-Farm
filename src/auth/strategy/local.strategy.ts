@@ -24,7 +24,7 @@ export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
     if (userIsAdmin) userRole = Role.ADMIN;
 
     return {
-      userId: user.id,
+      userId: user.userId,
       username: user.username,
       roles: [userRole],
     };
