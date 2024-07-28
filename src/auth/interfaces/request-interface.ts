@@ -8,6 +8,7 @@ export interface updatedRequest extends Request{
         userId: string;
         username: string;
         roles: Role;
+        farmName: string | 'Unknown';
     } | any;
     session: string | any;
 

@@ -24,10 +24,12 @@ model User {
   lastName    String
   contactInfo String
   role        String
-  farmName  String @unique
+  farmName    String? @unique
 
-  productsByFarmName Products[] @relation("ProductsByFarmName")
-  productsByFarmId   Products[] @relation("ProductsByFarmId")
+
+  Products Products[] @relation("ProductsByFarmId") 
+
+  Product Products[] @relation("ProductsByFarmName")
 }
 
 model Products {
@@ -39,10 +41,12 @@ model Products {
   category String
   price String
 
-  farmName    String
-  farmname  User       @relation("ProductsByFarmName", fields: [farmName], references: [farmName])
-  farmId    String     @db.ObjectId
-  farmid   User       @relation("ProductsByFarmId", fields: [farmId], references: [userId])
+  farmId    String?  @db.ObjectId
+  farmName String?
+
+  farmid   User?     @relation("ProductsByFarmId", fields: [farmId], references: [userId])
+  farmname User?      @relation("ProductsByFarmName", fields: [farmName], references: [farmName])
+
 }
 
 // model FarmProductLink {

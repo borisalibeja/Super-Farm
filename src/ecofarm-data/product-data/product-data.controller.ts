@@ -59,15 +59,14 @@ export class ProductDataController {
         @Body('name') productName: string,
         @Body('category') category: string,
         @Body('price') price: string,
-        @Req() req: updatedRequest,
-        @Session() session: updatedSessionData
+        @Session() session: updatedSessionData,
     ) {
-        const user = req.user + session.user;
+        const user = session.user;
         if (!user) {
         throw new UnauthorizedException('Farm not authenticated');
         }
-        const farmName: string | any = user.farmName;
-        const farmId: string | any = user.farmId;
+        const farmId: string = user.userId;
+        const farmName: string = user.farmName;
         return this.productDataService.createProduct(productName, category, price, farmId, farmName);
     } 
     

@@ -24,6 +24,8 @@ export class AuthController {
       userId: req.user.userId,
       username: req.user.username,
       roles: req.user.roles,
+      farmName: req.user.farmName,
+      farmId: req.user.farmId
     };
     return {
       status: HttpStatus.OK,

@@ -1,3 +1,4 @@
+import { tr } from '@faker-js/faker';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Role } from 'src/auth/enums/roles';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -23,25 +24,27 @@ export class UserService {
   }
 
 
-  async promoteCustomertoFarmer(customerId: string) {
+  async promoteCustomertoFarmer(userId: string, farmName: string | 'UnKnown') {
     const customer = await this.prisma.user.findFirst({
       where: {
-        userId: customerId,
+        userId: userId,
       }
     });
     if (!customer) throw new NotFoundException('Customer not found');
     const updatedCustomer = await this.prisma.user.update({
       where: {
-        userId: customerId,
+        userId: userId,
       },
       data: {
         role: Role.FARMER,
+        farmName: farmName,
       },
       select: {
         firstName: true,
         lastName: true,
         contactInfo: true,
-        role: true
+        role: true,
+        farmName: true
       }
     });
     return updatedCustomer;

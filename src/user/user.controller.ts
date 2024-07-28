@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Session } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Session } from '@nestjs/common';
 import { UseRoles } from 'nest-access-control';
 import { UserService } from './user.service';
 import { updatedSessionData } from 'src/auth/interfaces/session-data-interface';
@@ -17,19 +17,19 @@ export class UserController {
     action: 'update',
     possession: 'any',
   })
-  @Post('/promote')
-  promoteCustomertoFarmer(@Body('userId') customerId: string) {
-    return this.userService.promoteCustomertoFarmer(customerId);
+  @Post('/promote/:userId')
+  promoteCustomertoFarmer(@Param('userId') userId:string, @Body('farmName') farmName: string) {
+    return this.userService.promoteCustomertoFarmer(userId, farmName);
   }
 
   
   @UseRoles({
-    resource: 'farmerData',
+    resource: 'farmData',
     action: 'update',
     possession: 'any',
   })
-  @Post('/demote')
-  demoteFarmertoCustomer(@Body('userId') farmerId: string) {
+  @Post('demote/:userId')
+  demoteFarmertoCustomer(@Param('userId') farmerId: string) {
     return this.userService.demoteFarmertoCustomer(farmerId)
   }
 }

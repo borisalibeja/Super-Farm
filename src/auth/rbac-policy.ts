@@ -7,7 +7,8 @@ export const RBAC_POLICY: RolesBuilder = new RolesBuilder();
 RBAC_POLICY
   .grant(Role.CUSTOMER)
     .readOwn('customerData')
-    .updateOwn('customerData')
+    .update('customerData')
+    .deleteOwn('customerData')
     .readAny('productData')
     .readAny('farmData')
   .grant(Role.FARMER)
@@ -15,6 +16,7 @@ RBAC_POLICY
     .create('productData')
     .updateOwn('productData')
     .deleteOwn('productData')
+    .update('farmData')
   .grant(Role.ADMIN)
     .extend(Role.FARMER)
     .readAny('customerData')
@@ -23,7 +25,10 @@ RBAC_POLICY
     .readAny('productData')
     .updateAny('productData')
     .deleteAny('productData')
-    .readAny('farmerData')
-    .updateAny('farmerData')
-    .deleteAny('farmerData')
+    .readAny('farmData')
+    .updateAny('farmData')
+    .deleteAny('farmData')
+
+  .deny(Role.ADMIN)
+    .create('productData')
 

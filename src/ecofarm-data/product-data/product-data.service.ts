@@ -52,22 +52,23 @@ export class ProductDataService {
         return {message: 'Product deleted'}
     };
 
-    async createProduct(productName: string, category: string, price: string, farmName: string, farmId: string): 
-    Promise<{ productName: string; category: string; price: string; farmName: string; farmId: string}> {
+    async createProduct(productName: string, category: string, price: string, farmId: string, farmName: string) : 
+    Promise<{ productName: string; category: string; price: string; farmId: string | null, farmName: string | null}> {
         return this.prisma.products.create({
             data: { 
                 productName: productName,
                 category: category,
                 price: price,
-                farmName:  farmName,
-                farmId: farmId
+                farmId: farmId,
+                farmName: farmName
             },
             select: {
                 productName: true,
                 category: true,
                 price: true,
-                farmName:  true,
-                farmId: true
+                farmId: true,
+                farmName: true,
+
             }
         });
     }
