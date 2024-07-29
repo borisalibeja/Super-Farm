@@ -7,9 +7,14 @@ export interface updatedRequest extends Request{
     user: {
         userId: string;
         username: string;
-        roles: Role;
-        farmName: string | 'Unknown';
-    } | any;
+        password: string;
+        roles: Role | string | null;
+        farmId: string | 'Unknown' | null;
+        userFarmName: string | 'unknown' | null;
+        contactInfo: string | null;
+        firstName: string | null;
+        lastName: string | null;
+    };
     session: string | any;
 
 }

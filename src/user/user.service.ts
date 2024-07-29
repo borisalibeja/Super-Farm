@@ -37,14 +37,14 @@ export class UserService {
       },
       data: {
         role: Role.FARMER,
-        farmName: farmName,
+        userFarmName: farmName,
       },
       select: {
         firstName: true,
         lastName: true,
         contactInfo: true,
         role: true,
-        farmName: true
+        userFarmName: true
       }
     });
     return updatedCustomer;

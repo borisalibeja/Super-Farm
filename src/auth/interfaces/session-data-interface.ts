@@ -6,9 +6,13 @@ export interface updatedSessionData extends SessionData {
     user: {
         userId: string;
         username: string;
-        roles: Role;
-        farmId: string | 'Unknown';
-        farmName: string | 'Unknown' ;
+        password: string;
+        roles: Role | string | null;
+        farmId: string | 'Unknown' | null;
+        userFarmName: string | 'Unknown' | null;
+        contactInfo: string | null;
+        firstName: string | null;
+        lastName: string | null;
     }
 
 }

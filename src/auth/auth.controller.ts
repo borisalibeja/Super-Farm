@@ -1,31 +1,73 @@
 import {
+  BadRequestException,
+  Body,
   Controller,
   HttpCode,
   HttpStatus,
   Post,
   Req,
+  Request,
   Session,
   SetMetadata,
   UseGuards,
 } from '@nestjs/common';
-import { Request } from 'express';
-import { AuthGuard } from '@nestjs/passport';
-import { updatedRequest } from 'src/auth/interfaces/request-interface';
 import { updatedSessionData } from 'src/auth/interfaces/session-data-interface';
+import { AuthService } from './auth.service';
+import { Role } from './enums/roles';
+import { AuthGuard } from '@nestjs/passport';
+import { updatedRequest } from './interfaces/request-interface';
 
 @Controller('auth')
 export class AuthController {
+  constructor(private readonly authService: AuthService) {}
+
+  @SetMetadata('isPublic', true)
+  @HttpCode(HttpStatus.OK)
+  @Post('/signup')
+  async signUp(
+    @Body('username') username: string,
+    @Body('password') password: string,
+    @Session() session: updatedSessionData
+  ) {
+    if (!username || !password) {
+      throw new BadRequestException('Missing required fields');
+    }
+
+    const user = await this.authService.createUser(username, password);
+    session.user = {
+      userId: user.userId,
+      username: user.username,
+      roles: user.role,
+      farmId: user.userId,
+      userFarmName: user.userFarmName,
+      firstName: user.firstName,
+      contactInfo: user.contactInfo,
+      lastName: user.lastName,
+      password: user.password
+    };
+
+    return { message: 'User created successfully', user: session.user };
+  }
+
+
   @SetMetadata('isPublic', true)
   @UseGuards(AuthGuard('local'))
   @HttpCode(HttpStatus.OK)
   @Post('/login')
-  login(@Req() req: updatedRequest, @Session() session: updatedSessionData) {
+  login(
+    @Req() req: updatedRequest, 
+    @Session() session: updatedSessionData) {
     session.user = {
       userId: req.user.userId,
       username: req.user.username,
       roles: req.user.roles,
-      farmName: req.user.farmName,
-      farmId: req.user.farmId
+      farmId: req.user.farmId,
+      userFarmName: req.user.userFarmName,
+      firstName: req.user.firstName,
+      contactInfo: req.user.contactInfo,
+      lastName: req.user.lastName,
+      password: req.user.password
+      
     };
     return {
       status: HttpStatus.OK,
@@ -34,7 +76,7 @@ export class AuthController {
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('/logout')
-  logout(@Req() req: Request) {
+  logout(@Req() req: updatedRequest) {
     return new Promise((resolve, reject) => {
       req.session.destroy((err) => {
         if (err) reject(err);

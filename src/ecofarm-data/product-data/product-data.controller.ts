@@ -1,8 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Req, Session, UnauthorizedException } from '@nestjs/common';
 import { ProductDataService } from './product-data.service';
 import { InjectRolesBuilder, RolesBuilder, UseRoles } from 'nest-access-control';
-import { updatedRequest } from 'src/auth/interfaces/request-interface';
 import { updatedSessionData } from 'src/auth/interfaces/session-data-interface';
+import { updatedRequest } from 'src/auth/interfaces/request-interface';
 
 
 @Controller('product-data')
@@ -52,7 +52,7 @@ export class ProductDataController {
     @UseRoles({
         resource: 'productData',
         action: 'create',
-        possession: 'any',
+        possession: 'own',
     })
     @Post('createproduct')
     async createProduct(
@@ -60,13 +60,14 @@ export class ProductDataController {
         @Body('category') category: string,
         @Body('price') price: string,
         @Session() session: updatedSessionData,
+        @Req() req: updatedRequest
     ) {
-        const user = session.user;
+        const user = req.user;
         if (!user) {
         throw new UnauthorizedException('Farm not authenticated');
         }
         const farmId: string = user.userId;
-        const farmName: string = user.farmName;
+        const farmName: string | null = user.userFarmName ;
         return this.productDataService.createProduct(productName, category, price, farmId, farmName);
     } 
     
