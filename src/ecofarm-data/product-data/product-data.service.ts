@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { ProductCategory } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 
@@ -8,7 +9,7 @@ export class ProductDataService {
 
     
     getAllProducts() {
-        return this.prisma.products.findMany({
+        return this.prisma.product.findMany({
             select: {
                 productName: true,
                 category: true,
@@ -18,7 +19,7 @@ export class ProductDataService {
     };
 
     getProductById(productId: string) {
-        return this.prisma.products.findUnique({
+        return this.prisma.product.findUnique({
             where: {
                 productId: productId
             },
@@ -31,7 +32,7 @@ export class ProductDataService {
     }
 
     getProductByName(productName: string) {
-        return this.prisma.products.findMany({
+        return this.prisma.product.findMany({
             where: {
                 productName: productName
             },
@@ -44,7 +45,7 @@ export class ProductDataService {
     };
 
     async deleteProductById(productId: string): Promise<{message: string}> {
-        await this.prisma.products.delete({
+        await this.prisma.product.delete({
             where: {
                 productId: productId
             }
@@ -54,33 +55,31 @@ export class ProductDataService {
 
     async createProduct(
         productName: string, 
-        category: string, 
-        price: string, 
-        farmId: string | null, 
-        farmName: string | null
-    ) : Promise<{ productName: string; category: string; price: string; farmId: string | null, farmName: string | null}> {
-        return this.prisma.products.create({
+        category: ProductCategory, 
+        price: string,
+        farmId: string
+
+    ) : Promise<{ productName: string; category: ProductCategory; price: string; farmId?: string}> {
+        return this.prisma.product.create({
             data: { 
                 productName: productName,
                 category: category,
                 price: price,
-                farmId: farmId ? farmId : null,
-                farmName: farmName ? farmName : null,
+                productFarmId: farmId                
             },
             select: {
                 productName: true,
                 category: true,
                 price: true,
-                farmId: true,
-                farmName: true,
-
+                productFarmId: true
+                
             }
         });
     }
 
 
     async updateProductById(productId:string, productName?: string, category?: string, price?: string) {
-        const product = await this.prisma.products.findFirst({
+        const product = await this.prisma.product.findFirst({
           where: {
             productId: productId,
           },
@@ -97,7 +96,7 @@ export class ProductDataService {
         if (category) data.category = category;
         if (price) data.price = price;
 
-        const updatedProduct = await this.prisma.products.update({
+        const updatedProduct = await this.prisma.product.update({
         where: {
             productId: productId,
         },

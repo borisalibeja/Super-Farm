@@ -17,9 +17,12 @@ export class UserController {
     action: 'update',
     possession: 'any',
   })
-  @Post('/promote/:userId')
-  promoteCustomertoFarmer(@Param('userId') userId:string, @Body('farmName') farmName: string) {
-    return this.userService.promoteCustomertoFarmer(userId, farmName);
+  @Post('/promote')
+  promoteCustomertoFarmer(
+    @Body('farmName') farmName: string,
+    @Session() session: updatedSessionData
+  ) {
+    return this.userService.promoteCustomertoFarmer(session.user.userId, farmName);
   }
 
   

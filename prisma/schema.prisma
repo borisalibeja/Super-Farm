@@ -42,18 +42,26 @@ model User {
   role          Role
   contactInfo   String?
 
+
+  farm Farm? @relation("UserFarm")
 }
 
 model Farm {
-  farmId      String   @id @default(auto()) @map("_id") @db.ObjectId
+  userFarmId      String   @id @map("_id") @db.ObjectId
+  userid      User?     @relation("UserFarm", fields: [userFarmId], references: [userId])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  name        String   @unique
+  farmName    String?   @unique
   location    String?
   description String?
 
-  products    Product[] @relation("FarmProducts")
+  firstName     String?
+  lastName      String?
+  role          Role?
+  contactInfo   String?
+
+  Product Product[] @relation("FarmProduct")
 }
 
 model Product {
@@ -62,10 +70,10 @@ model Product {
   updatedAt   DateTime @updatedAt
 
   productName String
-  category    String
+  category    ProductCategory 
   price       String
 
-  farmId      String?  @db.ObjectId
-  farm        Farm?    @relation("FarmProducts", fields: [farmId], references: [farmId])
+  productFarmId      String? @db.ObjectId
+  farmid      Farm? @relation("FarmProduct", fields: [productFarmId], references: [userFarmId])
 
 }

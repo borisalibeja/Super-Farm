@@ -73,7 +73,6 @@ export class CustomerDataService {
                 lastName: lastName,
                 contactInfo: contactInfo,
                 role: 'CUSTOMER',
-                userFarmName: farmName
             },
             select: {
                 firstName: true,

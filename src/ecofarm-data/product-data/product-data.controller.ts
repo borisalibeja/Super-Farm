@@ -30,7 +30,7 @@ export class ProductDataController {
         action: 'read',
         possession: 'any',
     })
-    @Get('id/:id')
+    @Get(':id')
     getProductById(@Param('id') productId: string) {
         return this.productDataService.getProductById(productId);
     }
@@ -57,18 +57,16 @@ export class ProductDataController {
     @Post('createproduct')
     async createProduct(
         @Body('name') productName: string,
-        @Body('category') category: string,
+        @Body('category') category: string | any,
         @Body('price') price: string,
         @Session() session: updatedSessionData,
-        @Req() req: updatedRequest
     ) {
-        const user = req.user;
+        const user = session.user;
         if (!user) {
         throw new UnauthorizedException('Farm not authenticated');
         }
         const farmId: string = user.userId;
-        const farmName: string | null = user.userFarmName ;
-        return this.productDataService.createProduct(productName, category, price, farmId, farmName);
+        return this.productDataService.createProduct(productName, category, price, farmId);
     } 
     
     

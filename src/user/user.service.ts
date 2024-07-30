@@ -1,5 +1,5 @@
 import { tr } from '@faker-js/faker';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { Role } from 'src/auth/enums/roles';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -14,7 +14,6 @@ export class UserService {
       },
       select: {
         userId: true,
-        createdAt: true,
         username: true,
         firstName: true,
         lastName: true,
@@ -25,53 +24,48 @@ export class UserService {
 
 
   async promoteCustomertoFarmer(userId: string, farmName: string | 'UnKnown') {
-    const customer = await this.prisma.user.findFirst({
+    const user = await this.prisma.user.findUnique({
       where: {
-        userId: userId,
+        userId: userId
       }
     });
-    if (!customer) throw new NotFoundException('Customer not found');
-    const updatedCustomer = await this.prisma.user.update({
-      where: {
-        userId: userId,
-      },
+    if (!user) throw new NotFoundException('User not found');
+    if (user.role !== Role.CUSTOMER) {
+      throw new BadRequestException('User is not a customer');
+    }
+    await this.prisma.user.update({
+      where: {userId: userId},
+      data: {role: Role.FARMER}
+    })
+    const updatedCustomer = await this.prisma.farm.create({
       data: {
-        role: Role.FARMER,
-        userFarmName: farmName,
+        farmName: farmName,
+        userFarmId: userId
       },
       select: {
+        farmName: true,
         firstName: true,
         lastName: true,
         contactInfo: true,
         role: true,
-        userFarmName: true
       }
     });
     return updatedCustomer;
   }
 
 
-  async demoteFarmertoCustomer(farmerId: string) {
-    const farmer = await this.prisma.user.findFirst({
+  async demoteFarmertoCustomer(farmId: string) {
+    const farmer = await this.prisma.farm.findUnique({
       where: {
-        userId: farmerId,
+        userFarmId: farmId,
       }
     });
-    if (!farmer) throw new NotFoundException('Farmer not found');
-    const updatedFarmer = await this.prisma.user.update({
+    if (!farmer) throw new NotFoundException('Farm not found');
+    await this.prisma.farm.delete({
       where: {
-        userId: farmerId,
-      },
-      data: {
-        role: Role.CUSTOMER,
-      },
-      select: {
-        firstName: true,
-        lastName: true,
-        contactInfo: true,
-        role: true
+        userFarmId: farmId,
       }
     });
-    return updatedFarmer;
+    return "Farm Deleted";
   }
 }
