@@ -70,7 +70,7 @@ model Product {
   updatedAt   DateTime @updatedAt
 
   productName String
-  category    ProductCategory 
+  category    ProductCategory
   price       String
 
   productFarmId      String? @db.ObjectId

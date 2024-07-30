@@ -37,7 +37,7 @@ export class AuthController {
     session.user = {
       userId: user.userId,
       username: user.username,
-      roles: user.role,
+      role: user.role,
       firstName: user.firstName,
       contactInfo: user.contactInfo,
       lastName: user.lastName,
@@ -58,7 +58,7 @@ export class AuthController {
     session.user = {
       userId: req.user.userId,
       username: req.user.username,
-      roles: req.user.roles,
+      role: req.user.role,
       firstName: req.user.firstName,
       contactInfo: req.user.contactInfo,
       lastName: req.user.lastName,

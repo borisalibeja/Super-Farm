@@ -1,9 +1,10 @@
 
 export enum ProductCategory {
-    MEAT = 'MEAT',
-    DAIRY = 'DAIRY',
-    FRUITS = 'FRUITS',
-    VEGETABLES = 'VEGETABLES',
-    HOMEMADE = 'HOMEMADE'
-
+    BULMET = 'BULMET',
+    MISH = 'MISH',
+    VEZ = 'VEZ',
+    PERIME = 'PERIME',
+    FRUTA = 'FRUTA',
+    HOMEMADE = 'HOMEMADE',
+    ALKOL = 'ALKOL'
 }

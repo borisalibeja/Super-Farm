@@ -38,26 +38,6 @@ export class CustomerDataController {
     getCustomerByName(@Query('firstName') firstName: string){
         return this.customerDataService.getCustomerByName(firstName);
     }
-
-    
-    
-    
-    @UseRoles({
-        resource: 'customerData',
-        action: 'create',
-        possession: 'any',
-    })
-    @Post('createCustomer')
-    async createCustomer(
-        @Body('firstName') firstName: string,
-        @Body('lastName') lastName: string,
-        @Body('contactInfo') contactInfo: string,
-        @Body('username') username: string,
-        @Body('password') password: string,
-        @Body('farmName') farmName?: string
-    ) {
-        return this.customerDataService.createCustomer(firstName, lastName, contactInfo, username, password, farmName);
-    }
     
     
     @UseRoles({

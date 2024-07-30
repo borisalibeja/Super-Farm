@@ -64,27 +64,16 @@ export class CustomerDataService {
         return {message: 'Customer deleted'}
     };
 
-    async createCustomer(firstName: string, lastName: string, contactInfo: string, username: string, password: string, farmName?: string | any) {
-        return this.prisma.user.create({
-            data: { 
-                username: username,
-                password: await argon.hash(password),
-                firstName: firstName,
-                lastName: lastName,
-                contactInfo: contactInfo,
-                role: 'CUSTOMER',
-            },
-            select: {
-                firstName: true,
-                lastName: true,
-                contactInfo: true,
-                role: true
-            }
-        });
-    }
 
 
-    async updateCustomerById(customerId: string, firstName?: string, lastName?: string, contactInfo?: string, username?: string, password?: string) {
+    async updateCustomerById(
+        customerId: string, 
+        firstName?: string, 
+        lastName?: string, 
+        contactInfo?: string,
+        username?: string, 
+        password?: string
+    ) {
         const customer = await this.prisma.user.findFirst({
           where: {
             userId: customerId,

@@ -23,7 +23,7 @@ export class UserService {
   }
 
 
-  async promoteCustomertoFarmer(userId: string, farmName: string | 'UnKnown') {
+  async createFarmAccount(userId: string, farmName: string | 'UnKnown') {
     const user = await this.prisma.user.findUnique({
       where: {
         userId: userId
@@ -54,18 +54,35 @@ export class UserService {
   }
 
 
-  async demoteFarmertoCustomer(farmId: string) {
-    const farmer = await this.prisma.farm.findUnique({
+  async deleteFarmAccount(farmId: string) {
+    const user = await this.prisma.farm.findUnique({
       where: {
         userFarmId: farmId,
       }
     });
-    if (!farmer) throw new NotFoundException('Farm not found');
+    if (user?.role !== Role.FARMER) 
+      throw new BadRequestException('You have not a Farm Account');
+    await this.prisma.user.update({
+      where: {userId: farmId},
+      data: {role: Role.CUSTOMER}
+    })
     await this.prisma.farm.delete({
       where: {
         userFarmId: farmId,
       }
     });
-    return "Farm Deleted";
+    return "Farm Account Deleted";
+  }
+
+  async deleteUserAccount(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: {userId: userId}
+    });
+    if (user?.role !== Role.CUSTOMER) 
+    throw new BadRequestException('You have not a Customer Account');
+    await this.prisma.user.delete({
+      where: {userId: userId}
+    })
+    return "Account deleted"
   }
 }

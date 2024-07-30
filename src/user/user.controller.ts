@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Session } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Session } from '@nestjs/common';
 import { UseRoles } from 'nest-access-control';
 import { UserService } from './user.service';
 import { updatedSessionData } from 'src/auth/interfaces/session-data-interface';
@@ -22,7 +22,7 @@ export class UserController {
     @Body('farmName') farmName: string,
     @Session() session: updatedSessionData
   ) {
-    return this.userService.promoteCustomertoFarmer(session.user.userId, farmName);
+    return this.userService.createFarmAccount(session.user.userId, farmName);
   }
 
   
@@ -31,8 +31,17 @@ export class UserController {
     action: 'update',
     possession: 'any',
   })
-  @Post('demote/:userId')
-  demoteFarmertoCustomer(@Param('userId') farmerId: string) {
-    return this.userService.demoteFarmertoCustomer(farmerId)
+  @Delete('deletefarm')
+  demoteFarmertoCustomer(
+    @Session() session: updatedSessionData
+  ) {
+    return this.userService.deleteFarmAccount(session.user.userId)
+  }
+
+  @Delete('deleteaccount')
+  deleteAccount(
+    @Session() session: updatedSessionData
+  ) {
+    return this.userService.deleteUserAccount(session.user.userId)
   }
 }
