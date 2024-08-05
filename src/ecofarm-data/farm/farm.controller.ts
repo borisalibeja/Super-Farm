@@ -1,8 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Session } from '@nestjs/common';
 import { UseRoles } from 'nest-access-control';
-import { FarmDataService } from './farm-data.service';
+import { FarmDataService } from './farm.service';
+import { updatedSessionData } from 'src/auth/interfaces/session-data-interface';
 
-@Controller('farm-data')
+@Controller('farm')
 export class FarmDataController {
     constructor(private farmDataService: FarmDataService) {}
 
@@ -39,13 +40,29 @@ export class FarmDataController {
         return this.farmDataService.getFarmByName(farmName);
     }
     
-    
+
     @UseRoles({
-        resource: 'farmData',
-        action: 'update',
-        possession: 'any',
+    resource: 'farmData',
+    action: 'create',
+    possession: 'any',
     })
-    @Patch('updateFarm/:id')
+    @Post('/create')
+    createFarm(
+        @Body('farmName') farmName: string,
+        @Session() session: updatedSessionData
+    ) {
+        const userId = session.user.userId
+        return this.farmDataService.createFarm(userId, farmName);
+    }
+
+  
+  
+  @UseRoles({
+      resource: 'farmData',
+      action: 'update',
+      possession: 'any',
+    })
+    @Patch('update/:id')
     async updateFarmById(
         @Param('id') farmId: string,
         @Body('firstName') firstName?: string,
@@ -56,16 +73,20 @@ export class FarmDataController {
     ) {
         return this.farmDataService.updateFarmById(farmId, firstName, lastName, contactInfo, username, password)
     }
-
     
-    @UseRoles({
-        resource: 'farmData',
-        action: 'delete',
-        possession: 'any',
-    })
-    @Delete('id/:id')
-    deleteFarmById(@Param('id') farmId: string) {
-        return this.farmDataService.deleteFarmById(farmId)
+
+    // @UseRoles({
+    //   resource: 'farmData',
+    //   action: 'delete',
+    //   possession: 'own'
+    // })
+    @Delete('delete/:farmId?')
+    deleteFarm(
+        @Session() session: updatedSessionData,
+        @Param('farmId') farmId?: string,
+    ) {
+        const userId = session.user.userId
+      return this.farmDataService.deleteFarm(userId, farmId)
     }
 }
 

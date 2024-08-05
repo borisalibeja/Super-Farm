@@ -33,7 +33,7 @@ export class AuthController {
       throw new BadRequestException('Missing required fields');
     }
 
-    const user = await this.authService.createUser(username, password);
+    const user = await this.authService.signUp(username, password);
     session.user = {
       userId: user.userId,
       username: user.username,

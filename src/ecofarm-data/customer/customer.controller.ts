@@ -1,8 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
-import { CustomerDataService } from './customer-data.service';
+import { CustomerDataService } from './customer.service';
 import { UseRoles } from 'nest-access-control';
 
-@Controller('customer-data')
+@Controller('customer')
 export class CustomerDataController {
     constructor(private customerDataService: CustomerDataService) {}
 
@@ -34,7 +34,7 @@ export class CustomerDataController {
         action: 'read',
         possession: 'any',
     })
-    @Get('/name')
+    @Get('name')
     getCustomerByName(@Query('firstName') firstName: string){
         return this.customerDataService.getCustomerByName(firstName);
     }
@@ -45,7 +45,7 @@ export class CustomerDataController {
         action: 'update',
         possession: 'any',
     })
-    @Patch('updateCustomer/:id')
+    @Patch('update/:id')
     async updateCustomerById(
         @Param('id') customerId: string,
         @Body('firstName') firstName?: string,

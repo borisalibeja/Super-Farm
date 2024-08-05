@@ -1,11 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Req, Session, UnauthorizedException } from '@nestjs/common';
-import { ProductDataService } from './product-data.service';
+import { ProductDataService } from './product.service';
 import { InjectRolesBuilder, RolesBuilder, UseRoles } from 'nest-access-control';
 import { updatedSessionData } from 'src/auth/interfaces/session-data-interface';
 import { updatedRequest } from 'src/auth/interfaces/request-interface';
 
 
-@Controller('product-data')
+@Controller('product')
 export class ProductDataController {
     constructor(
         private productDataService: ProductDataService, 
@@ -54,7 +54,7 @@ export class ProductDataController {
         action: 'create',
         possession: 'own',
     })
-    @Post('createproduct')
+    @Post('create')
     async createProduct(
         @Body('name') productName: string,
         @Body('category') category: string | any,
@@ -75,7 +75,7 @@ export class ProductDataController {
         action: 'update',
         possession: 'any',
     })
-    @Patch('updateproduct/:id')
+    @Patch('update/:id')
     async updateProductById(
         @Param('id') productId: string,
         @Body('name') name?: string,

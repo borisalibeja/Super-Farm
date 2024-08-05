@@ -22,11 +22,12 @@ export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
     let userRole = Role.CUSTOMER;
     if (userisFarmer) userRole = Role.FARMER;
     if (userIsAdmin) userRole = Role.ADMIN;
+  
 
     return {
       userId: user.userId,
       username: user.username,
-      roles: [userRole],
+      roles: userRole,
     };
   }
 }

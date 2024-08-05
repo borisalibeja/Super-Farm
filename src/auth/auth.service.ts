@@ -7,7 +7,7 @@ import { Role } from './enums/roles';
 export class AuthService {
   constructor(private prisma: PrismaService) {}
 
-  async createUser(
+  async signUp(
     username: string, 
     password: string
     ) {

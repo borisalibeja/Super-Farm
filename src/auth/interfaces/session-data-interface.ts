@@ -1,5 +1,5 @@
 import { SessionData } from "express-session";
-import { Role } from "src/auth/enums/roles";
+import { Role } from "nest-access-control";
 
 
 export interface updatedSessionData extends SessionData {
@@ -9,7 +9,7 @@ export interface updatedSessionData extends SessionData {
         lastName: string | null;
         username: string;
         password: string;
-        role: Role | string | null;
+        role: Role | string;
         contactInfo: string | null;
     }
 
