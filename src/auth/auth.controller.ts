@@ -37,7 +37,7 @@ export class AuthController {
     session.user = {
       userId: user.userId,
       username: user.username,
-      role: user.role,
+      role: [user.role as Role],
       firstName: user.firstName,
       contactInfo: user.contactInfo,
       lastName: user.lastName,

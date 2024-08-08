@@ -10,7 +10,7 @@ export interface updatedRequest extends Request{
         lastName: string | null;
         username: string;
         password: string;
-        role: Role | string ;
+        role: Role[];
         contactInfo: string | null;
     };
     session: string | any;

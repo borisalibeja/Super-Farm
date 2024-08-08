@@ -30,7 +30,7 @@ export class AuthService {
   async validateUser(username: string, password: string) {
     const user = await this.prisma.user.findFirst({
       where: {
-        username
+        username: username
       },
       select: {
         role: true,

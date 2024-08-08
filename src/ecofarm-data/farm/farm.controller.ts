@@ -1,7 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Session } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Session, SetMetadata, UseGuards } from '@nestjs/common';
 import { UseRoles } from 'nest-access-control';
 import { FarmDataService } from './farm.service';
 import { updatedSessionData } from 'src/auth/interfaces/session-data-interface';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard, SessionGuard } from 'src/auth/guards';
+import { Roles } from 'src/auth/guards/roles.decorator';
+import { Role } from 'src/auth/enums/roles';
 
 @Controller('farm')
 export class FarmDataController {
@@ -41,12 +45,13 @@ export class FarmDataController {
     }
     
 
+    
     @UseRoles({
-    resource: 'farmData',
-    action: 'create',
-    possession: 'any',
-    })
-    @Post('/create')
+        resource: 'farmData',
+        action: 'create',
+        possession: 'any',
+      })
+    @Post('create')
     createFarm(
         @Body('farmName') farmName: string,
         @Session() session: updatedSessionData

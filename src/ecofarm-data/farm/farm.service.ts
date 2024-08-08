@@ -94,7 +94,7 @@ export class FarmDataService {
       else if (user?.role === String(Role.FARMER)) {
         await this.prisma.user.update({
           where: { userId: userId },
-          data: { role: String(Role.CUSTOMER) },
+          data: { role: Role.CUSTOMER},
         });
         await this.prisma.farm.delete({
           where: {userFarmId: userId}

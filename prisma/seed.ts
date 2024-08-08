@@ -1,5 +1,7 @@
 import * as argon from 'argon2';
 import { PrismaClient } from '@prisma/client';
+import {Role} from '../src/auth/enums/roles'
+
 
 export async function createCustomer() {
   return {
@@ -8,10 +10,8 @@ export async function createCustomer() {
     username: "borissalibeja@gmail.com",
     password: await argon.hash('boriss'),
     contactInfo: "berat",
-    role: "ADMIN",
-
+    role: Role.CUSTOMER,
   }
-  
 }
 
 async function main() { 
@@ -27,10 +27,7 @@ async function main() {
       contactInfo: customerData.contactInfo,
       role: customerData.role
     }
-    
-      
-    
-  })
+  });
 }
 
 main()

@@ -16,8 +16,8 @@ export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
       throw new UnauthorizedException('Credentials incorrect');
     }
 
-    const userIsAdmin = user.role === Role.ADMIN;
-    const userisFarmer = user.role === Role.FARMER;
+    const userIsAdmin = user.role ;
+    const userisFarmer = user.role;
 
     let userRole = Role.CUSTOMER;
     if (userisFarmer) userRole = Role.FARMER;
@@ -27,7 +27,7 @@ export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
     return {
       userId: user.userId,
       username: user.username,
-      roles: userRole,
+      role: userRole,
     };
   }
 }
