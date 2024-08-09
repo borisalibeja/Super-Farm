@@ -19,8 +19,9 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "strict": true,
+    "paths": {"src/*": ["src/*"]},
     "esModuleInterop": true,
   },
-  "include": ["src/**/*.ts", "src/ecofarm-data/customer", "src/esrc/ecofarm-data/farmrc/ecofarm-data/product-data"],
+  "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }

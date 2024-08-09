@@ -5,10 +5,10 @@
       "type": "node",
       "request": "launch",
       "name": "Debug NestJS Application",
-      "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}/src/main.ts",
-      "runtimeExecutable": "C:/Program Files/nodejs/node.exe", // Replace this with the path to your Node.js executable
-      "runtimeArgs": ["--nolazy", "-r", "ts-node/register", "-r", "tsconfig-paths/register"],
+      "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/ts-node-dev",
+      "program": "${workspaceFolder}/src/main.ts",  // Correct path to your main TypeScript file
+      "restart": true,
+      "runtimeArgs": ["--nolazy", "--respawn", "--transpile-only", "-r", "tsconfig-paths/register", "--watch", "src"],
       "sourceMaps": true,
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
