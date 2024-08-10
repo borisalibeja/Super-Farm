@@ -1,7 +1,6 @@
-import { Body, Controller, Delete, Get, Session } from '@nestjs/common';
+import { Controller, Delete, Get, Session } from '@nestjs/common';
 import { UserService } from './user.service';
 import { updatedSessionData } from 'src/auth/interfaces/session-data-interface';
-
 
 @Controller('user')
 export class UserController {
@@ -12,11 +11,8 @@ export class UserController {
     return this.userService.getMe(session.user.userId);
   }
 
-
   @Delete('delete')
-  deleteAccount(
-    @Session() session: updatedSessionData
-  ) {
-    return this.userService.deleteUserAccount(session.user.userId)
+  deleteAccount(@Session() session: updatedSessionData) {
+    return this.userService.deleteUserAccount(session.user.userId);
   }
 }

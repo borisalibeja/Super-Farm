@@ -7,11 +7,10 @@ import { Role } from './enums/roles';
 export class AuthService {
   constructor(private prisma: PrismaService) {}
 
-  async signUp(
-    username: string, 
-    password: string
-    ) {
-    const existingUser = await this.prisma.user.findUnique({ where: { username } });
+  async signUp(username: string, password: string) {
+    const existingUser = await this.prisma.user.findUnique({
+      where: { username },
+    });
     if (existingUser) {
       throw new ConflictException('User already exists');
     }
@@ -21,24 +20,22 @@ export class AuthService {
       data: {
         username: username,
         password: hashedPassword,
-        role: Role.CUSTOMER
+        role: Role.CUSTOMER,
       },
     });
   }
 
-
   async validateUser(username: string, password: string) {
     const user = await this.prisma.user.findFirst({
       where: {
-        username: username
+        username: username,
       },
       select: {
         role: true,
         userId: true,
         username: true,
-        password: true
-      }
-      
+        password: true,
+      },
     });
     if (!user) return null;
 

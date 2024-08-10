@@ -6,7 +6,6 @@ import {
   HttpStatus,
   Post,
   Req,
-  Request,
   Session,
   SetMetadata,
   UseGuards,
@@ -27,7 +26,7 @@ export class AuthController {
   async signUp(
     @Body('username') username: string,
     @Body('password') password: string,
-    @Session() session: updatedSessionData
+    @Session() session: updatedSessionData,
   ) {
     if (!username || !password) {
       throw new BadRequestException('Missing required fields');
@@ -41,20 +40,17 @@ export class AuthController {
       firstName: user.firstName,
       contactInfo: user.contactInfo,
       lastName: user.lastName,
-      password: user.password
+      password: user.password,
     };
 
     return { message: 'User created successfully', user: session.user };
   }
 
-
   @SetMetadata('isPublic', true)
   @UseGuards(AuthGuard('local'))
   @HttpCode(HttpStatus.OK)
   @Post('/login')
-  login(
-    @Req() req: updatedRequest, 
-    @Session() session: updatedSessionData) {
+  login(@Req() req: updatedRequest, @Session() session: updatedSessionData) {
     session.user = {
       userId: req.user.userId,
       username: req.user.username,
@@ -62,8 +58,7 @@ export class AuthController {
       firstName: req.user.firstName,
       contactInfo: req.user.contactInfo,
       lastName: req.user.lastName,
-      password: req.user.password
-      
+      password: req.user.password,
     };
     return {
       status: HttpStatus.OK,
