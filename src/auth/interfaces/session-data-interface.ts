@@ -3,6 +3,7 @@ import { Role } from "../enums/roles";
 
 
 
+
 export interface updatedSessionData extends SessionData {
     user: {
         userId: string;

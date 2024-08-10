@@ -1,44 +1,43 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Session, SetMetadata, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Session } from '@nestjs/common';
 import { UseRoles } from 'nest-access-control';
 import { FarmDataService } from './farm.service';
 import { updatedSessionData } from 'src/auth/interfaces/session-data-interface';
-import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard, SessionGuard } from 'src/auth/guards';
-import { Roles } from 'src/auth/guards/roles.decorator';
 import { Role } from 'src/auth/enums/roles';
+// import { UseRoles } from 'src/auth/guards/use-roles.decorator';
+
 
 @Controller('farm')
 export class FarmDataController {
     constructor(private farmDataService: FarmDataService) {}
 
 
-    @UseRoles({
-        resource: 'farmData',
-        action: 'read',
-        possession: 'any',
-    })
+    // @UseRoles({
+    //     resource: 'farmData',
+    //     action: 'read',
+    //     possession: 'any',
+    // })
     @Get('all')
     getAllFarm(){
         return this.farmDataService.getAllFarms();
     }
 
 
-    @UseRoles({
-        resource: 'farmData',
-        action: 'read',
-        possession: 'any',
-    })
+    // @UseRoles({
+    //     resource: 'farmData',
+    //     action: 'read',
+    //     possession: 'any',
+    // })
     @Get('id/:id')
     getFarmById(@Param('id') farmId: string) {
         return this.farmDataService.getFarmById(farmId);
     }
     
 
-    @UseRoles({
-        resource: 'farmData',
-        action: 'read',
-        possession: 'any',
-    })
+    // @UseRoles({
+    //     resource: 'farmData',
+    //     action: 'read',
+    //     possession: 'any',
+    // })
     @Get('name')
     getFarmByName(@Query('farmName') farmName: string){
         return this.farmDataService.getFarmByName(farmName);
@@ -47,10 +46,10 @@ export class FarmDataController {
 
     
     @UseRoles({
-        resource: 'farmData',
-        action: 'create',
-        possession: 'any',
-      })
+            resource: 'farmData',
+            action: 'read',
+            possession: 'any',
+        })
     @Post('create')
     createFarm(
         @Body('farmName') farmName: string,
@@ -62,11 +61,11 @@ export class FarmDataController {
 
   
   
-  @UseRoles({
-      resource: 'farmData',
-      action: 'update',
-      possession: 'any',
-    })
+//   @UseRoles({
+//       resource: 'farmData',
+//       action: 'update',
+//       possession: 'any',
+//     })
     @Patch('update/:id')
     async updateFarmById(
         @Param('id') farmId: string,

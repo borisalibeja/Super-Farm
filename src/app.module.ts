@@ -5,7 +5,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard, SessionGuard } from './auth/guards';
 import { UserModule } from './user/user.module';
 import { AccessControlModule, ACGuard } from 'nest-access-control';
-import { RBAC_POLICY } from './auth/rbac-policy';
+import { RBAC_POLICY } from './auth/rbac/rbac-policy';
 import { EcoFarmDataModule } from './ecofarm-data/ecofarm.module';
 
 
