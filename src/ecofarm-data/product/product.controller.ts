@@ -11,10 +11,13 @@ import {
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
-import { ProductDataService } from './product.service';
 import { UseRoles } from 'nest-access-control';
+import { ProductDataService } from './product.service';
 import { updatedSessionData } from 'src/auth/interfaces/session-data-interface';
 import { AppACGuard } from 'src/auth/guards';
+import { GetProductByNameDto } from './product-dto/query-product.dto';
+import { CreateProductDto } from './product-dto/create-product.dto';
+import { UpdateProductDto } from './product-dto/update-product.dto';
 
 @UseGuards(AppACGuard)
 @Controller('product')
@@ -47,8 +50,11 @@ export class ProductDataController {
     possession: 'any',
   })
   @Get('name')
-  getProductByName(@Query('productName') productName: string) {
-    return this.productDataService.getProductByName(productName);
+  getProductByName(@Query() getProductByNameDto: GetProductByNameDto) {
+    // Using GetProductByNameDto
+    return this.productDataService.getProductByName(
+      getProductByNameDto.productName,
+    );
   }
 
   @UseRoles({
@@ -58,9 +64,7 @@ export class ProductDataController {
   })
   @Post('create')
   async createProduct(
-    @Body('name') productName: string,
-    @Body('category') category: string | any,
-    @Body('price') price: string,
+    @Body() createProductDto: CreateProductDto, // Using CreateProductDto
     @Session() session: updatedSessionData,
   ) {
     const user = session.user;
@@ -69,9 +73,9 @@ export class ProductDataController {
     }
     const farmId: string = user.userId;
     return this.productDataService.createProduct(
-      productName,
-      category,
-      price,
+      createProductDto.productName,
+      createProductDto.category,
+      createProductDto.price,
       farmId,
     );
   }
@@ -84,10 +88,9 @@ export class ProductDataController {
   @Patch('update/:id')
   async updateProductById(
     @Param('id') productId: string,
-    @Body('name') name?: string,
-    @Body('category') category?: string,
-    @Body('price') price?: string,
+    @Body() updateProductDto: UpdateProductDto, // Using UpdateProductDto
   ) {
+    const { name, category, price } = updateProductDto;
     return this.productDataService.updateProductById(
       productId,
       name,

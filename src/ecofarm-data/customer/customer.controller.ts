@@ -12,6 +12,8 @@ import {
 import { CustomerDataService } from './customer.service';
 import { UseRoles } from 'nest-access-control';
 import { AppACGuard } from 'src/auth/guards';
+import { GetCustomerByNameDto } from './customer-dto/query-customer.dto';
+import { UpdateCustomerDto } from './customer-dto/update-customer.dto';
 
 @UseGuards(AppACGuard)
 @Controller('customer')
@@ -44,8 +46,10 @@ export class CustomerDataController {
     possession: 'any',
   })
   @Get('name')
-  getCustomerByName(@Query('firstName') firstName: string) {
-    return this.customerDataService.getCustomerByName(firstName);
+  getCustomerByName(@Query() getCustomerByNameDto: GetCustomerByNameDto) {
+    return this.customerDataService.getCustomerByName(
+      getCustomerByNameDto.firstName,
+    );
   }
 
   @UseRoles({
@@ -56,12 +60,10 @@ export class CustomerDataController {
   @Patch('update/:id')
   async updateCustomerById(
     @Param('id') customerId: string,
-    @Body('firstName') firstName?: string,
-    @Body('lastName') lastName?: string,
-    @Body('contactInfo') contactInfo?: string,
-    @Body('username') username?: string,
-    @Body('password') password?: string,
+    @Body() updateCustomerDto: UpdateCustomerDto,
   ) {
+    const { firstName, lastName, contactInfo, username, password } =
+      updateCustomerDto;
     return this.customerDataService.updateCustomerById(
       customerId,
       firstName,
@@ -70,15 +72,5 @@ export class CustomerDataController {
       username,
       password,
     );
-  }
-
-  @UseRoles({
-    resource: 'customerData',
-    action: 'delete',
-    possession: 'any',
-  })
-  @Delete('id/:id')
-  deleteCustomerById(@Param('id') customerId: string) {
-    return this.customerDataService.deleteCustomerById(customerId);
   }
 }

@@ -17,11 +17,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role {
-  CUSTOMER
-  FARMER
-  ADMIN
-}
 
 model User {
   userId        String   @id @default(auto()) @map("_id") @db.ObjectId

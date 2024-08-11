@@ -29,7 +29,7 @@ export class AppACGuard extends ACGuard implements CanActivate {
     }
 
     // Convert the single role to an array if necessary for compatibility
-    request.user.roles = [user.role];
+    request.user.roles = user.role;
     // Call the parent class's canActivate method
     const hasAccess = await super.canActivate(context);
 

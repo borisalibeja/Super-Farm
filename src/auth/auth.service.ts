@@ -2,6 +2,7 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import * as argon from 'argon2';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Role } from './enums/roles';
+import { updatedSessionData } from './interfaces/session-data-interface';
 
 @Injectable()
 export class AuthService {
@@ -16,13 +17,14 @@ export class AuthService {
     }
 
     const hashedPassword = await argon.hash(password);
-    return this.prisma.user.create({
+    const user = await this.prisma.user.create({
       data: {
         username: username,
         password: hashedPassword,
         role: Role.CUSTOMER,
       },
     });
+    return user;
   }
 
   async validateUser(username: string, password: string) {
@@ -43,5 +45,17 @@ export class AuthService {
     if (!pwValid) return null;
 
     return user;
+  }
+
+  async createSessionForUser(user: any, session: updatedSessionData) {
+    session.user = {
+      userId: user.userId,
+      username: user.username,
+      role: [user.role as Role],
+      firstName: user.firstName,
+      contactInfo: user.contactInfo,
+      lastName: user.lastName,
+      password: user.password,
+    };
   }
 }

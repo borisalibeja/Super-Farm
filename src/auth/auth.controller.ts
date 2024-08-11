@@ -15,6 +15,7 @@ import { AuthService } from './auth.service';
 import { Role } from './enums/roles';
 import { AuthGuard } from '@nestjs/passport';
 import { updatedRequest } from './interfaces/request-interface';
+import { UserDto } from './auth-dto/user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -24,24 +25,16 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('/signup')
   async signUp(
-    @Body('username') username: string,
-    @Body('password') password: string,
+    @Body() createUserDto: UserDto,
     @Session() session: updatedSessionData,
   ) {
+    const { username, password } = createUserDto;
     if (!username || !password) {
       throw new BadRequestException('Missing required fields');
     }
 
     const user = await this.authService.signUp(username, password);
-    session.user = {
-      userId: user.userId,
-      username: user.username,
-      role: [user.role as Role],
-      firstName: user.firstName,
-      contactInfo: user.contactInfo,
-      lastName: user.lastName,
-      password: user.password,
-    };
+    await this.authService.createSessionForUser(user, session);
 
     return { message: 'User created successfully', user: session.user };
   }
@@ -50,16 +43,12 @@ export class AuthController {
   @UseGuards(AuthGuard('local'))
   @HttpCode(HttpStatus.OK)
   @Post('/login')
-  login(@Req() req: updatedRequest, @Session() session: updatedSessionData) {
-    session.user = {
-      userId: req.user.userId,
-      username: req.user.username,
-      role: req.user.role,
-      firstName: req.user.firstName,
-      contactInfo: req.user.contactInfo,
-      lastName: req.user.lastName,
-      password: req.user.password,
-    };
+  async login(
+    @Body() loginUserDto: UserDto,
+    @Req() req: updatedRequest,
+    @Session() session: updatedSessionData,
+  ) {
+    await this.authService.createSessionForUser(req.user, session);
     return {
       status: HttpStatus.OK,
     };

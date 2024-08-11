@@ -14,6 +14,9 @@ import { UseRoles } from 'nest-access-control';
 import { FarmDataService } from './farm.service';
 import { updatedSessionData } from 'src/auth/interfaces/session-data-interface';
 import { AppACGuard } from 'src/auth/guards';
+import { GetFarmByNameDto } from './farm-dto/query-farm.dto';
+import { CreateFarmDto } from './farm-dto/create-farm.dto';
+import { UpdateFarmDto } from './farm-dto/update-farm.dto';
 
 @UseGuards(AppACGuard)
 @Controller('farm')
@@ -46,8 +49,9 @@ export class FarmDataController {
     possession: 'any',
   })
   @Get('name')
-  getFarmByName(@Query('farmName') farmName: string) {
-    return this.farmDataService.getFarmByName(farmName);
+  getFarmByName(@Query() getFarmByNameDto: GetFarmByNameDto) {
+    // Using GetFarmByNameDto
+    return this.farmDataService.getFarmByName(getFarmByNameDto.farmName);
   }
 
   @UseRoles({
@@ -57,11 +61,11 @@ export class FarmDataController {
   })
   @Post('create')
   createFarm(
-    @Body('farmName') farmName: string,
+    @Body() createFarmDto: CreateFarmDto, // Using CreateFarmDto
     @Session() session: updatedSessionData,
   ) {
     const userId = session.user.userId;
-    return this.farmDataService.createFarm(userId, farmName);
+    return this.farmDataService.createFarm(userId, createFarmDto.farmName);
   }
 
   @UseRoles({
@@ -72,12 +76,10 @@ export class FarmDataController {
   @Patch('update/:id')
   async updateFarmById(
     @Param('id') farmId: string,
-    @Body('firstName') firstName?: string,
-    @Body('lastName') lastName?: string,
-    @Body('contactInfo') contactInfo?: string,
-    @Body('username') username?: string,
-    @Body('password') password?: string,
+    @Body() updateFarmDto: UpdateFarmDto, // Using UpdateFarmDto
   ) {
+    const { firstName, lastName, contactInfo, username, password } =
+      updateFarmDto;
     return this.farmDataService.updateFarmById(
       farmId,
       firstName,
