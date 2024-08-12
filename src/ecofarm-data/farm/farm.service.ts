@@ -106,7 +106,7 @@ export class FarmDataService {
       });
       return 'Farm deleted by farmer';
     }
-    return "Farm coun't be deleted";
+    return "You don't have a Farm Account";
   }
 
   getAllFarms() {

@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   Session,
   UnauthorizedException,
   UseGuards,
@@ -14,48 +15,18 @@ import {
 import { UseRoles } from 'nest-access-control';
 import { ProductDataService } from './product.service';
 import { updatedSessionData } from 'src/auth/interfaces/session-data-interface';
-import { AppACGuard } from 'src/auth/guards';
+import { AppACGuard, JwtAuthGuard } from 'src/auth/guards';
 import { GetProductByNameDto } from './product-dto/query-product.dto';
 import { CreateProductDto } from './product-dto/create-product.dto';
 import { UpdateProductDto } from './product-dto/update-product.dto';
+import { ApiTags } from '@nestjs/swagger';
+import { updatedRequest } from 'src/auth/interfaces/request-interface';
 
-@UseGuards(AppACGuard)
+@ApiTags('Product')
+@UseGuards(AppACGuard, JwtAuthGuard)
 @Controller('product')
 export class ProductDataController {
   constructor(private productDataService: ProductDataService) {}
-
-  @UseRoles({
-    resource: 'productData',
-    action: 'read',
-    possession: 'any',
-  })
-  @Get('all')
-  getAllProducts() {
-    return this.productDataService.getAllProducts();
-  }
-
-  @UseRoles({
-    resource: 'productData',
-    action: 'read',
-    possession: 'any',
-  })
-  @Get(':id')
-  getProductById(@Param('id') productId: string) {
-    return this.productDataService.getProductById(productId);
-  }
-
-  @UseRoles({
-    resource: 'productData',
-    action: 'read',
-    possession: 'any',
-  })
-  @Get('name')
-  getProductByName(@Query() getProductByNameDto: GetProductByNameDto) {
-    // Using GetProductByNameDto
-    return this.productDataService.getProductByName(
-      getProductByNameDto.productName,
-    );
-  }
 
   @UseRoles({
     resource: 'productData',
@@ -65,9 +36,9 @@ export class ProductDataController {
   @Post('create')
   async createProduct(
     @Body() createProductDto: CreateProductDto, // Using CreateProductDto
-    @Session() session: updatedSessionData,
+    @Req() req: updatedRequest,
   ) {
-    const user = session.user;
+    const user = req.user;
     if (!user) {
       throw new UnauthorizedException('Farm not authenticated');
     }
@@ -101,10 +72,43 @@ export class ProductDataController {
 
   @UseRoles({
     resource: 'productData',
+    action: 'read',
+    possession: 'any',
+  })
+  @Get('all')
+  getAllProducts() {
+    return this.productDataService.getAllProducts();
+  }
+
+  @UseRoles({
+    resource: 'productData',
+    action: 'read',
+    possession: 'any',
+  })
+  @Get('name')
+  getProductByName(@Query() getProductByNameDto: GetProductByNameDto) {
+    // Using GetProductByNameDto
+    return this.productDataService.getProductByName(
+      getProductByNameDto.productName,
+    );
+  }
+
+  @UseRoles({
+    resource: 'productData',
+    action: 'read',
+    possession: 'any',
+  })
+  @Get(':id')
+  getProductById(@Param('id') productId: string) {
+    return this.productDataService.getProductById(productId);
+  }
+
+  @UseRoles({
+    resource: 'productData',
     action: 'delete',
     possession: 'any',
   })
-  @Delete('id/:id')
+  @Delete(':id')
   deleteProductById(@Param('id') productId: string) {
     return this.productDataService.deleteProductById(productId);
   }

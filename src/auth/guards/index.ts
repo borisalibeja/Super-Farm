@@ -1,2 +1,2 @@
 export * from './roles.guard';
-export * from './session.guard';
+export * from './jwt-auth.guard';

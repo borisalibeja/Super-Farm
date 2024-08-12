@@ -11,11 +11,13 @@ import {
 } from '@nestjs/common';
 import { CustomerDataService } from './customer.service';
 import { UseRoles } from 'nest-access-control';
-import { AppACGuard } from 'src/auth/guards';
+import { AppACGuard, JwtAuthGuard } from 'src/auth/guards';
 import { GetCustomerByNameDto } from './customer-dto/query-customer.dto';
 import { UpdateCustomerDto } from './customer-dto/update-customer.dto';
+import { ApiTags } from '@nestjs/swagger';
 
-@UseGuards(AppACGuard)
+@ApiTags('Customer')
+@UseGuards(AppACGuard, JwtAuthGuard)
 @Controller('customer')
 export class CustomerDataController {
   constructor(private customerDataService: CustomerDataService) {}
@@ -35,9 +37,11 @@ export class CustomerDataController {
     action: 'read',
     possession: 'any',
   })
-  @Get('id/:id')
-  getCustomerById(@Param('id') customerId: string) {
-    return this.customerDataService.getCustomerById(customerId);
+  @Get('name')
+  getCustomerByName(@Query() getCustomerByNameDto: GetCustomerByNameDto) {
+    return this.customerDataService.getCustomerByName(
+      getCustomerByNameDto.firstName,
+    );
   }
 
   @UseRoles({
@@ -45,11 +49,9 @@ export class CustomerDataController {
     action: 'read',
     possession: 'any',
   })
-  @Get('name')
-  getCustomerByName(@Query() getCustomerByNameDto: GetCustomerByNameDto) {
-    return this.customerDataService.getCustomerByName(
-      getCustomerByNameDto.firstName,
-    );
+  @Get(':id')
+  getCustomerById(@Param('id') customerId: string) {
+    return this.customerDataService.getCustomerById(customerId);
   }
 
   @UseRoles({

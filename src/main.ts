@@ -7,18 +7,6 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.use(
-    session({
-      resave: false,
-      saveUninitialized: false,
-      name: 'session',
-      secret: '128h381h38',
-      cookie: {
-        secure: false,
-      },
-    }),
-  );
-
   app.useGlobalPipes(
     new ValidationPipe({
       forbidNonWhitelisted: true,
@@ -27,10 +15,16 @@ async function bootstrap() {
   );
 
   const config = new DocumentBuilder()
-    .setTitle('Cats example')
-    .setDescription('The cats API description')
+    .setTitle('Super Farm')
+    .setDescription('The Super Farm API description')
     .setVersion('1.0')
-    .addTag('cats')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+      },
+      'access_token', // This is the name of the security scheme
+    )
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

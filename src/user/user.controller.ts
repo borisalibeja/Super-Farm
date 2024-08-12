@@ -1,25 +1,28 @@
-import { Controller, Delete, Get, Session } from '@nestjs/common';
+import { Controller, Delete, Get, Req, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
-import { updatedSessionData } from 'src/auth/interfaces/session-data-interface';
 import { UserProfileDto } from './user-dto/user-profile.dto';
 import { DeleteAccountResponseDto } from './user-dto/user-delete.dto';
+import { ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/guards';
 
+@ApiTags('User')
+@UseGuards(JwtAuthGuard)
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
 
   @Get('me')
-  async getMe(@Session() session: updatedSessionData): Promise<UserProfileDto> {
+  async getMe(@Req() req: any): Promise<UserProfileDto> {
     // Returning UserProfileDto
-    return this.userService.getMe(session.user.userId);
+    const userId = req.user.userId;
+    return this.userService.getMe(userId);
   }
 
   @Delete('delete')
-  async deleteAccount(
-    @Session() session: updatedSessionData,
-  ): Promise<DeleteAccountResponseDto> {
+  async deleteAccount(@Req() req: any): Promise<DeleteAccountResponseDto> {
     // Returning DeleteAccountResponseDto
-    await this.userService.deleteUserAccount(session.user.userId);
+    const userId = req.user.userId;
+    await this.userService.deleteUserAccount(userId);
     return { message: 'Account deleted' };
   }
 }

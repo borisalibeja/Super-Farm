@@ -1,14 +1,25 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import * as argon from 'argon2';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Role } from './enums/roles';
 import { updatedSessionData } from './interfaces/session-data-interface';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private jwtService: JwtService,
+  ) {}
 
-  async signUp(username: string, password: string) {
+  async signUp(
+    username: string,
+    password: string,
+  ): Promise<{ access_token: string }> {
     const existingUser = await this.prisma.user.findUnique({
       where: { username },
     });
@@ -24,27 +35,50 @@ export class AuthService {
         role: Role.CUSTOMER,
       },
     });
-    return user;
+    const access_token = this.generateToken(user);
+
+    return { access_token };
   }
 
-  async validateUser(username: string, password: string) {
-    const user = await this.prisma.user.findFirst({
-      where: {
-        username: username,
-      },
+  async signIn(
+    username: string,
+    password: string,
+  ): Promise<{ access_token: string; user: any }> {
+    const user = await this.prisma.user.findUnique({
+      where: { username },
+    });
+    if (!user || !(await argon.verify(user.password, password))) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+    const access_token = this.generateToken(user);
+
+    // Exclude sensitive fields like password from the returned user object
+    const { password: _, ...userWithoutPassword } = user;
+
+    return {
+      access_token,
+      user: userWithoutPassword,
+    };
+  }
+
+  private generateToken(user: any): string {
+    const payload = {
+      sub: user.userId,
+      username: user.username,
+      roles: user.role,
+    };
+    return this.jwtService.sign(payload);
+  }
+
+  async validateUserById(userId: string): Promise<any> {
+    return this.prisma.user.findUnique({
+      where: { userId },
       select: {
-        role: true,
         userId: true,
         username: true,
-        password: true,
+        role: true, // Ensure this matches the property in your User model
       },
     });
-    if (!user) return null;
-
-    const pwValid = await argon.verify(user.password, password);
-    if (!pwValid) return null;
-
-    return user;
   }
 
   async createSessionForUser(user: any, session: updatedSessionData) {

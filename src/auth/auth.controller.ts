@@ -6,17 +6,17 @@ import {
   HttpStatus,
   Post,
   Req,
-  Session,
   SetMetadata,
   UseGuards,
 } from '@nestjs/common';
-import { updatedSessionData } from 'src/auth/interfaces/session-data-interface';
 import { AuthService } from './auth.service';
-import { Role } from './enums/roles';
 import { AuthGuard } from '@nestjs/passport';
-import { updatedRequest } from './interfaces/request-interface';
 import { UserDto } from './auth-dto/user.dto';
+import { ApiTags } from '@nestjs/swagger';
+import { updatedRequest } from './interfaces/request-interface';
+import { JwtAuthGuard } from './guards';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -26,45 +26,34 @@ export class AuthController {
   @Post('/signup')
   async signUp(
     @Body() createUserDto: UserDto,
-    @Session() session: updatedSessionData,
-  ) {
+  ): Promise<{ access_token: string }> {
     const { username, password } = createUserDto;
+
     if (!username || !password) {
       throw new BadRequestException('Missing required fields');
     }
 
-    const user = await this.authService.signUp(username, password);
-    await this.authService.createSessionForUser(user, session);
-
-    return { message: 'User created successfully', user: session.user };
+    return this.authService.signUp(username, password);
   }
 
   @SetMetadata('isPublic', true)
-  @UseGuards(AuthGuard('local'))
+  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Post('/login')
   async login(
     @Body() loginUserDto: UserDto,
-    @Req() req: updatedRequest,
-    @Session() session: updatedSessionData,
-  ) {
-    await this.authService.createSessionForUser(req.user, session);
-    return {
-      status: HttpStatus.OK,
-    };
+  ): Promise<{ access_token: string }> {
+    const { username, password } = loginUserDto;
+    return this.authService.signIn(username, password);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('/logout')
   logout(@Req() req: updatedRequest) {
-    return new Promise((resolve, reject) => {
-      req.session.destroy((err) => {
-        if (err) reject(err);
-        resolve({
-          status: 204,
-          message: 'Session destroyed',
-        });
-      });
-    });
+    // Since we're using JWT, there is no server-side session to destroy
+    return {
+      status: 204,
+      message: 'Logout successful',
+    };
   }
 }
