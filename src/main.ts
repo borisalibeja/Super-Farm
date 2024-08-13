@@ -22,10 +22,12 @@ async function bootstrap() {
       {
         type: 'http',
         scheme: 'bearer',
+        bearerFormat: 'JWT',
       },
       'access_token', // This is the name of the security scheme
     )
     .build();
+
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 

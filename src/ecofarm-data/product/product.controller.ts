@@ -19,11 +19,12 @@ import { AppACGuard, JwtAuthGuard } from 'src/auth/guards';
 import { GetProductByNameDto } from './product-dto/query-product.dto';
 import { CreateProductDto } from './product-dto/create-product.dto';
 import { UpdateProductDto } from './product-dto/update-product.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { updatedRequest } from 'src/auth/interfaces/request-interface';
 
 @ApiTags('Product')
 @UseGuards(AppACGuard, JwtAuthGuard)
+@ApiBearerAuth('access_token')
 @Controller('product')
 export class ProductDataController {
   constructor(private productDataService: ProductDataService) {}

@@ -14,10 +14,11 @@ import { UseRoles } from 'nest-access-control';
 import { AppACGuard, JwtAuthGuard } from 'src/auth/guards';
 import { GetCustomerByNameDto } from './customer-dto/query-customer.dto';
 import { UpdateCustomerDto } from './customer-dto/update-customer.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Customer')
 @UseGuards(AppACGuard, JwtAuthGuard)
+@ApiBearerAuth('access_token')
 @Controller('customer')
 export class CustomerDataController {
   constructor(private customerDataService: CustomerDataService) {}

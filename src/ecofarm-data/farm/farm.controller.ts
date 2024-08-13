@@ -18,11 +18,12 @@ import { AppACGuard, JwtAuthGuard } from 'src/auth/guards';
 import { GetFarmByNameDto } from './farm-dto/query-farm.dto';
 import { CreateFarmDto } from './farm-dto/create-farm.dto';
 import { UpdateFarmDto } from './farm-dto/update-farm.dto';
-import { ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { updatedRequest } from 'src/auth/interfaces/request-interface';
 
 @ApiTags('Farm')
 @UseGuards(AppACGuard, JwtAuthGuard)
+@ApiBearerAuth('access_token')
 @Controller('farm')
 export class FarmDataController {
   constructor(private farmDataService: FarmDataService) {}
